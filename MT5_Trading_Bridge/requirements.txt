@@ -14,7 +14,14 @@ pytest>=7.0.0
 black>=22.0.0
 flake8>=4.0.0
 
-# Optional: For more advanced ML features in future
-# numpy>=1.21.0
-# pandas>=1.3.0
-# scikit-learn>=1.0.0
+# For advanced ML features (v2.0)
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# For async support (Python 3.8+)
+aiofiles>=23.0.0
+
+# For enhanced data processing
+matplotlib>=3.7.0
+seaborn>=0.12.0
