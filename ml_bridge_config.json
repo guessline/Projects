@@ -1,0 +1,32 @@
+{
+  "paths": {
+    "features_file": "C:\\Users\\AdmVps\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\features_bt.csv",
+    "prediction_file": "C:\\Users\\AdmVps\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\prediction_bt.txt",
+    "log_file": "C:\\Users\\AdmVps\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\ml_bridge.log",
+    "stats_file": "C:\\Users\\AdmVps\\AppData\\Roaming\\MetaQuotes\\Terminal\\Common\\Files\\ml_bridge_stats.json"
+  },
+  "settings": {
+    "poll_interval": 0.1,
+    "write_retries": 5,
+    "cooldown_seconds": 0.5,
+    "expected_fields": 4,
+    "max_consecutive_errors": 10
+  },
+  "signal_thresholds": {
+    "buy_threshold": 1.001,
+    "sell_threshold": 0.999,
+    "min_price_difference": 0.01,
+    "atr_multiplier": 0.5
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(levelname)s - %(message)s",
+    "max_log_size_mb": 10,
+    "backup_count": 5
+  },
+  "monitoring": {
+    "stats_update_interval": 100,
+    "auto_save_stats": true,
+    "print_stats_periodically": true
+  }
+}
