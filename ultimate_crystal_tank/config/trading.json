@@ -1,0 +1,112 @@
+{
+  "trading_parameters": {
+    "timeframes": ["M15", "H1"],
+    "primary_timeframe": "M15",
+    "lookback_periods": 100,
+    "min_confidence_long": 0.55,
+    "min_confidence_short": 0.45,
+    "ev_threshold": 0.0,
+    "max_holding_periods": 48
+  },
+  "triple_barrier": {
+    "profit_target_multiplier": 2.0,
+    "stop_loss_multiplier": 1.0,
+    "max_holding_bars": 48,
+    "atr_period": 14,
+    "dynamic_barriers": true,
+    "barrier_decay": false
+  },
+  "meta_labeling": {
+    "enabled": true,
+    "base_model_threshold": 0.5,
+    "meta_features": [
+      "volatility_regime",
+      "trend_strength", 
+      "market_microstructure",
+      "seasonality",
+      "cross_asset_correlation"
+    ]
+  },
+  "probability_calibration": {
+    "method": "isotonic",
+    "cv_folds": 5,
+    "calibration_sample_weight": true
+  },
+  "feature_engineering": {
+    "price_features": {
+      "returns": [1, 5, 15, 30],
+      "volatility_windows": [10, 20, 50],
+      "momentum_periods": [5, 10, 20]
+    },
+    "technical_indicators": {
+      "rsi_period": 14,
+      "bb_period": 20,
+      "bb_std": 2.0,
+      "macd_fast": 12,
+      "macd_slow": 26,
+      "macd_signal": 9,
+      "adx_period": 14,
+      "atr_period": 14
+    },
+    "microstructure": {
+      "bid_ask_spread": true,
+      "order_flow": false,
+      "volume_profile": false
+    },
+    "cross_asset": {
+      "correlation_window": 50,
+      "beta_window": 30,
+      "regime_correlation": true
+    },
+    "seasonality": {
+      "hour_of_day": true,
+      "day_of_week": true,
+      "day_of_month": false,
+      "month_of_year": false
+    }
+  },
+  "model_parameters": {
+    "base_model": {
+      "type": "random_forest",
+      "n_estimators": 200,
+      "max_depth": 10,
+      "min_samples_split": 50,
+      "min_samples_leaf": 20,
+      "max_features": "sqrt",
+      "random_state": 42
+    },
+    "meta_model": {
+      "type": "logistic_regression",
+      "C": 1.0,
+      "penalty": "l2",
+      "solver": "liblinear",
+      "random_state": 42
+    },
+    "ensemble": {
+      "enabled": false,
+      "methods": ["voting", "stacking"],
+      "cv_folds": 5
+    }
+  },
+  "execution": {
+    "order_type": "market",
+    "slippage_buffer": 1.5,
+    "max_order_attempts": 3,
+    "order_timeout_seconds": 30,
+    "position_check_interval": 60,
+    "emergency_exit_conditions": [
+      "max_drawdown_exceeded",
+      "connection_lost",
+      "margin_call_risk"
+    ]
+  },
+  "logging": {
+    "level": "INFO",
+    "trade_log": true,
+    "model_predictions_log": true,
+    "performance_metrics_log": true,
+    "error_log": true,
+    "log_rotation_mb": 100,
+    "log_retention_days": 30
+  }
+}

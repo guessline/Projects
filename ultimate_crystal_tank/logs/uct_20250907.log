@@ -1,0 +1,8 @@
+2025-09-07 15:40:49,915 - UltimateCrystalTank - INFO - Ultimate Crystal Perfect Tank инициализирован
+2025-09-07 15:40:49,915 - UltimateCrystalTank - INFO - Конфигурация загружена: config/portfolio.json
+2025-09-07 15:40:49,915 - UltimateCrystalTank - INFO - Анализ инструмента: BTCUSD
+2025-09-07 15:40:57,275 - UltimateCrystalTank - INFO - Ultimate Crystal Perfect Tank инициализирован
+2025-09-07 15:40:57,275 - UltimateCrystalTank - INFO - Конфигурация загружена: config/portfolio.json
+2025-09-07 15:40:57,275 - UltimateCrystalTank - INFO - Запуск бэктеста: 2023-01-01 - 2023-12-31
+2025-09-07 15:40:57,275 - UltimateCrystalTank - INFO - Инструменты для бэктеста: ['BTCUSD', 'ETHUSD', 'SOLUSD', 'BNBUSD', 'XRPUSD', 'ADAUSD', 'EURUSD', 'GBPUSD', 'USDJPY', 'XAUUSD']
+2025-09-07 15:40:57,275 - UltimateCrystalTank - INFO - Бэктест завершен
