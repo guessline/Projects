@@ -1,18 +1,50 @@
 import os
+import argparse
 import time
 import tempfile
 import shutil
 from datetime import datetime
 
-# ========= ПУТИ (точно Common\Files) =========
-FEAT = r"C:\Users\AdmVps\AppData\Roaming\MetaQuotes\Terminal\Common\Files\features_bt.csv"
-PRED = r"C:\Users\AdmVps\AppData\Roaming\MetaQuotes\Terminal\Common\Files\prediction_bt.txt"
+# ========= ПУТИ (по умолчанию Linux-дружественные; можно переопределить через CLI/ENV) =========
+# ENV overrides:
+#   FEAT_PATH, PRED_PATH, POLL_INTERVAL, WRITE_RETRIES, COOLDOWN_SEC, EXPECTED_FIELDS
+# CLI flags (see parse_cli_and_env): --features, --prediction, --poll-interval, --retries, --cooldown-sec, --expected-fields
+FEAT = os.getenv('FEAT_PATH', "/workspace/features_bt.csv")
+PRED = os.getenv('PRED_PATH', "/workspace/prediction_bt.txt")
 
 # ========= НАСТРОЙКИ =========
-POLL_INTERVAL = 0.1        # увеличен интервал опроса
-WRITE_RETRIES = 5          # увеличено количество попыток
-COOLDOWN_SEC  = 0.5        # увеличена пауза для стабильности
-EXPECTED_FIELDS = 4        # "YYYY.MM.DD HH:MM;close;ema;atr"
+POLL_INTERVAL = float(os.getenv('POLL_INTERVAL', 0.1))        # увеличен интервал опроса
+WRITE_RETRIES = int(os.getenv('WRITE_RETRIES', 5))            # увеличено количество попыток
+COOLDOWN_SEC  = float(os.getenv('COOLDOWN_SEC', 0.5))         # увеличена пауза для стабильности
+EXPECTED_FIELDS = int(os.getenv('EXPECTED_FIELDS', 4))        # "YYYY.MM.DD HH:MM;close;ema;atr"
+
+def parse_cli_and_env():
+    """Парсинг аргументов командной строки с fallback на ENV и дефолты.
+
+    Приоритет значений: CLI > ENV > дефолты файла.
+    """
+    parser = argparse.ArgumentParser(description="Python ML Bridge: stream features -> write signals")
+    parser.add_argument("--features", default=os.getenv("FEAT_PATH", FEAT), help="Путь к файлу признаков (CSV); можно через ENV FEAT_PATH")
+    parser.add_argument("--prediction", default=os.getenv("PRED_PATH", PRED), help="Путь к файлу предсказаний; можно через ENV PRED_PATH")
+    parser.add_argument("--poll-interval", type=float, default=float(os.getenv("POLL_INTERVAL", POLL_INTERVAL)), help="Интервал опроса файла (сек)")
+    parser.add_argument("--retries", type=int, default=int(os.getenv("WRITE_RETRIES", WRITE_RETRIES)), help="Количество попыток записи")
+    parser.add_argument("--cooldown-sec", type=float, default=float(os.getenv("COOLDOWN_SEC", COOLDOWN_SEC)), help="Пауза после записи (сек)")
+    parser.add_argument("--expected-fields", type=int, default=int(os.getenv("EXPECTED_FIELDS", EXPECTED_FIELDS)), help="Ожидаемое число полей в строке признаков")
+
+    args = parser.parse_args()
+
+    # Нормализация путей
+    features_path = os.path.abspath(os.path.expanduser(args.features))
+    prediction_path = os.path.abspath(os.path.expanduser(args.prediction))
+
+    return {
+        "features_path": features_path,
+        "prediction_path": prediction_path,
+        "poll_interval": max(0.01, args.poll_interval),
+        "retries": max(1, args.retries),
+        "cooldown_sec": max(0.0, args.cooldown_sec),
+        "expected_fields": max(1, args.expected_fields),
+    }
 
 def _read_last_line_robust(path):
     """
@@ -182,6 +214,16 @@ def cleanup_old_predictions():
         pass
 
 def main():
+    # Применяем конфигурацию из CLI/ENV
+    cfg = parse_cli_and_env()
+    global FEAT, PRED, POLL_INTERVAL, WRITE_RETRIES, COOLDOWN_SEC, EXPECTED_FIELDS
+    FEAT = cfg["features_path"]
+    PRED = cfg["prediction_path"]
+    POLL_INTERVAL = cfg["poll_interval"]
+    WRITE_RETRIES = cfg["retries"]
+    COOLDOWN_SEC = cfg["cooldown_sec"]
+    EXPECTED_FIELDS = cfg["expected_fields"]
+
     print("=" * 70)
     print("Python ML Bridge - FINAL ROBUST VERSION")
     print("=" * 70)
