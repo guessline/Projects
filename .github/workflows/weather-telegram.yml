@@ -1,0 +1,30 @@
+name: Утренняя погода в Telegram
+
+on:
+  schedule:
+    # 06:30 по московскому времени (МСК = UTC+3, без перехода на летнее время).
+    # GitHub Actions использует UTC, поэтому 03:30 UTC.
+    - cron: "30 3 * * *"
+  # Позволяет запустить вручную из вкладки Actions для проверки.
+  workflow_dispatch:
+
+jobs:
+  send-weather:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r weather_telegram_agent/requirements.txt
+
+      - name: Send weather report
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python weather_telegram_agent/weather_bot.py
