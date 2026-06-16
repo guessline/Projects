@@ -1,0 +1,27 @@
+# MT5 Trading Bridge Requirements
+# No external dependencies required - uses only Python standard library
+# 
+# Standard library modules used:
+# - os
+# - time 
+# - tempfile
+# - shutil
+# - datetime
+# - pathlib
+
+# Optional: For enhanced development and testing
+pytest>=7.0.0
+black>=22.0.0
+flake8>=4.0.0
+
+# For advanced ML features (v2.0)
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# For async support (Python 3.8+)
+aiofiles>=23.0.0
+
+# For enhanced data processing
+matplotlib>=3.7.0
+seaborn>=0.12.0
